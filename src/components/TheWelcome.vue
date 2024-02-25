@@ -6,7 +6,7 @@
         <div class="credential">
           <strong>Login:</strong>
           <span class="credential-text">
-            {{ login }}
+            <span @click="copyToClipboard(login)">{{ login }}</span>
             <MDBBtn size="sm" @click="copyToClipboard(login)" color="success">Copy</MDBBtn>
           </span>
         </div>
@@ -65,7 +65,7 @@ export default {
   },
   methods: {
     togglePasswordVisibility() {
-      this.isHidden = !this.isHidden;
+      this.isHidden = false;
     },
     copyToClipboard(text) {
       const textarea = document.createElement("textarea");
@@ -81,14 +81,15 @@ export default {
 
 <style scoped>
 .credential-container {
-  display: flex;
-  flex-direction: column;
+  display: grid;
   gap: 10px;
 }
 
 .credential {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  /* Две колонки: одна занимает всю доступную ширину, вторая под кнопку */
+  gap: 10px;
   background-color: #282c34;
   padding: 10px;
   border-radius: 5px;
@@ -116,4 +117,19 @@ export default {
 .credential-text span:hover::before {
   margin-right: 5px;
 }
+
+@media screen and (max-width: 767px) {
+  .credential {
+    grid-template-columns: 1fr;
+    /* Одна колонка на узких экранах */
+  }
+}
+
+@media screen and (min-width: 1024px) and (max-width: 1200px) {
+  .credential {
+    grid-template-columns: 1fr;
+    /* Одна колонка на узких экранах */
+  }
+}
 </style>
+

@@ -7,4 +7,8 @@ import Header from './components/Header.vue'
   <RouterView />
 </template>
 
-<style></style>
+<style>
+#app {
+  font-family: Roboto, Helvetica, Arial, sans-serif;
+}
+</style>

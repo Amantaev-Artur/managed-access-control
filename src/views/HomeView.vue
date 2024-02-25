@@ -51,4 +51,28 @@ export default {
   width: calc(66.66% - 80px);
   box-sizing: border-box;
 }
+
+@media screen and (max-width: 767px) {
+  .card-container {
+    width: calc(85%);
+    box-sizing: border-box;
+  }
+
+  .double-width {
+    width: calc(85%);
+    box-sizing: border-box;
+  }
+}
+
+@media screen and (min-width: 768px) and (max-width: 1023px) {
+  .card-container {
+    width: calc(40% - 20px);
+    box-sizing: border-box;
+  }
+
+  .double-width {
+    width: calc(80%);
+    box-sizing: border-box;
+  }
+}
 </style>
