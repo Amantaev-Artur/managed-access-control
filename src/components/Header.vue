@@ -7,7 +7,7 @@
     <MDBCollapse id="navbarColor01" v-model="collapse7">
       <MDBNavbarNav class="mb-2 mb-lg-0">
         <MDBNavbarItem href="/" linkClass="link-secondary">Dashboard</MDBNavbarItem>
-        <MDBNavbarItem href="#" linkClass="link-secondary">Team</MDBNavbarItem>
+        <MDBNavbarItem href="/teams" linkClass="link-secondary">Teams</MDBNavbarItem>
         <MDBNavbarItem href="#" linkClass="link-secondary">Projects</MDBNavbarItem>
       </MDBNavbarNav>
     </MDBCollapse>

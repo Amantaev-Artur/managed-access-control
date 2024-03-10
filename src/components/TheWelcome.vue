@@ -1,6 +1,16 @@
 <template>
   <MDBCard bg="dark" text="white center" style="height: 18rem">
-    <MDBCardHeader>{{ cardHeader }}</MDBCardHeader>
+    <MDBCardHeader class="card-header">
+      {{ cardHeader }}
+      <MDBDropdown v-model="dropdown1">
+        <MDBDropdownToggle size="sm" color="dark" @click="dropdown1 = !dropdown1">edit</MDBDropdownToggle>
+        <MDBDropdownMenu aria-labelledby="dropdownMenuButton">
+          <MDBDropdownItem href="#">Action</MDBDropdownItem>
+          <MDBDropdownItem href="#">Another Action</MDBDropdownItem>
+          <MDBDropdownItem href="#">Something else here</MDBDropdownItem>
+        </MDBDropdownMenu>
+      </MDBDropdown>
+    </MDBCardHeader>
     <MDBCardBody>
       <div class="credential-container">
         <div class="credential">
@@ -26,7 +36,8 @@
 </template>
 
 <script>
-import { MDBCard, MDBCardHeader, MDBCardBody, MDBBtn, MDBCardFooter } from "mdb-vue-ui-kit";
+import { MDBCard, MDBCardHeader, MDBCardBody, MDBBtn, MDBCardFooter, MDBDropdown, MDBDropdownToggle, MDBDropdownMenu, MDBDropdownItem } from "mdb-vue-ui-kit";
+import { ref } from 'vue';
 
 export default {
   components: {
@@ -35,6 +46,10 @@ export default {
     MDBCardBody,
     MDBBtn,
     MDBCardFooter,
+    MDBDropdown,
+    MDBDropdownToggle,
+    MDBDropdownMenu,
+    MDBDropdownItem
   },
   props: {
     cardHeader: {
@@ -63,6 +78,12 @@ export default {
       isHidden: true,
     };
   },
+  setup() {
+    const dropdown1 = ref(false);
+    return {
+      dropdown1
+    }
+  },
   methods: {
     togglePasswordVisibility() {
       this.isHidden = false;
@@ -80,6 +101,11 @@ export default {
 </script>
 
 <style scoped>
+.card-header {
+  display: flex;
+  justify-content: space-between;
+}
+
 .credential-container {
   display: grid;
   gap: 10px;
@@ -132,4 +158,3 @@ export default {
   }
 }
 </style>
-
