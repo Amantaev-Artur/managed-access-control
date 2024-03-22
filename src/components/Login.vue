@@ -91,6 +91,7 @@ import {
 } from "mdb-vue-ui-kit";
 import { ref } from "vue";
 import axios from "axios"; // Import axios library
+import { useRouter } from 'vue-router';
 
 export default {
   components: {
@@ -120,16 +121,21 @@ export default {
       serverError: null
     });
 
+    const router = useRouter();
+
     const login = async () => {
       try {
-        const response = await axios.post("/login", {
-          email: form7LoginEmail.value,
-          password: form7LoginPassword.value
-        });
+        // const response = await axios.post("/login", {
+        //   email: form7LoginEmail.value,
+        //   password: form7LoginPassword.value
+        // });
 
         // Save the token and user data to localStorage or Vuex store
-        localStorage.setItem("jwtToken", response.data.jwtToken);
-        localStorage.setItem("userData", JSON.stringify(response.data.userData));
+        // localStorage.setItem("jwtToken", response.data.jwtToken);
+        // localStorage.setItem("userData", JSON.stringify(response.data.userData));
+        localStorage.setItem("jwtToken", 'abc');
+        localStorage.setItem("userData", JSON.stringify({ name: 'Artur A', username: 'archi' }));
+        router.push({ name: 'home' })
       } catch (error) {
         console.error("Login failed", error);
 
@@ -150,7 +156,6 @@ export default {
           password: form7RegisterPassword.value
         });
 
-        // Save the token and user data to localStorage or Vuex store
         localStorage.setItem("jwtToken", response.data.jwtToken);
         localStorage.setItem("userData", JSON.stringify(response.data.userData));
       } catch (error) {
