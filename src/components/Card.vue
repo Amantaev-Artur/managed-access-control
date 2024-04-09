@@ -1,13 +1,16 @@
 <template>
-  <MDBCard bg="dark" text="white center" style="height: 18rem">
+  <MDBCard bg="dark" text="white center">
     <MDBCardHeader class="card-header">
       {{ cardHeader }}
       <MDBDropdown v-model="dropdown1">
         <MDBDropdownToggle size="sm" color="dark" @click="dropdown1 = !dropdown1">edit</MDBDropdownToggle>
         <MDBDropdownMenu aria-labelledby="dropdownMenuButton">
-          <MDBDropdownItem href="#">Action</MDBDropdownItem>
-          <MDBDropdownItem href="#">Another Action</MDBDropdownItem>
-          <MDBDropdownItem href="#">Something else here</MDBDropdownItem>
+          <li>
+            <router-link :to="`/accesses/${id}/edit`" class="dropdown-item">Edit</router-link>
+          </li>
+          <li>
+            <router-link :to="`/accesses/${id}`" class="dropdown-item">Show</router-link>
+          </li>
         </MDBDropdownMenu>
       </MDBDropdown>
     </MDBCardHeader>
@@ -72,6 +75,9 @@ export default {
       type: String,
       default: "2 days ago",
     },
+    id: {
+      type: Number
+    }
   },
   data() {
     return {
@@ -80,6 +86,7 @@ export default {
   },
   setup() {
     const dropdown1 = ref(false);
+
     return {
       dropdown1
     }
@@ -96,6 +103,9 @@ export default {
       document.execCommand('copy');
       document.body.removeChild(textarea);
     },
+    deleteAccess(id) {
+      console.log(id)
+    }
   },
 };
 </script>

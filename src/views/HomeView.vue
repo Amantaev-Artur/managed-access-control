@@ -1,78 +1,26 @@
-<script setup>
-import TheWelcome from '../components/TheWelcome.vue'
-</script>
-
 <template>
   <main>
-    <div class="cards-container">
-      <div v-for="card in cards" :key="card.id" :class="{ 'double-width': card.type === 'double' }"
-        class="card-container">
-        <TheWelcome :cardHeader=card.content :login=card.login :password=card.password :cardFooter=card.last_update />
-      </div>
-
+    <Cards></Cards>
+    <div class="d-grid gap-2 col-3 mx-auto new-access-btn">
+      <router-link to="/accesses/create" class="btn btn-primary">New Access</router-link>
     </div>
   </main>
 </template>
 
 <script>
+import Cards from '../components/Cards.vue'
+import { MDBBtn } from "mdb-vue-ui-kit";
+
 export default {
-  data() {
-    return {
-      cards: [
-        { id: 1, type: 'single', content: 'Сервис 1', login: 'aa@aa.ru', password: '123', last_update: 'Сегодня' },
-        { id: 2, type: 'double', content: 'Карточка 2' },
-        { id: 2, type: 'single', content: 'Карточка 2' },
-        { id: 2, type: 'single', content: 'Карточка 2' },
-        { id: 2, type: 'single', content: 'Карточка 2' },
-        { id: 2, type: 'double', content: 'Карточка 2' },
-        // Добавьте другие карточки
-      ],
-    };
-  },
-};
+  components: {
+    Cards,
+    MDBBtn
+  }
+}
 </script>
 
 <style>
-.cards-container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 40px;
-  align-items: center;
+.new-access-btn {
   margin-top: 40px;
-}
-
-.card-container {
-  width: calc(33.33% - 60px);
-  box-sizing: border-box;
-}
-
-.double-width {
-  width: calc(66.66% - 80px);
-  box-sizing: border-box;
-}
-
-@media screen and (max-width: 767px) {
-  .card-container {
-    width: calc(85%);
-    box-sizing: border-box;
-  }
-
-  .double-width {
-    width: calc(85%);
-    box-sizing: border-box;
-  }
-}
-
-@media screen and (min-width: 768px) and (max-width: 1023px) {
-  .card-container {
-    width: calc(40% - 20px);
-    box-sizing: border-box;
-  }
-
-  .double-width {
-    width: calc(80%);
-    box-sizing: border-box;
-  }
 }
 </style>

@@ -13,32 +13,53 @@ const router = createRouter({
       path: '/',
       name: 'home',
       component: HomeView,
-      meta: { requiresAuth: true } // Добавляем мета-свойство для защищенного маршрута
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/accesses/create',
+      name: 'accessCreate',
+      component: () => import('../views/AccessCreate.vue'),
+      props: true,
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/accesses/:id',
+      name: 'access',
+      component: () => import('../views/Access.vue'),
+      props: true,
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/accesses/:id/edit',
+      name: 'accessEdit',
+      component: () => import('../views/AccessEdit.vue'),
+      props: true,
+      meta: { requiresAuth: true }
     },
     {
       path: '/cabinet',
       name: 'cabinet',
       component: () => import('../views/CabinetView.vue'),
-      meta: { requiresAuth: true } // Добавляем мета-свойство для защищенного маршрута
+      meta: { requiresAuth: true }
     },
     {
       path: '/teams',
       name: 'teams',
       component: () => import('../views/TeamsView.vue'),
-      meta: { requiresAuth: true } // Добавляем мета-свойство для защищенного маршрута
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: LoginView
     },
     {
       path: '/team/:id',
       name: 'team',
       component: () => import('../views/TeamView.vue'),
       props: true,
-      meta: { requiresAuth: true } // Добавляем мета-свойство для защищенного маршрута
+      meta: { requiresAuth: true }
     },
-    {
-      path: '/login',
-      name: 'login',
-      component: LoginView
-    }
   ]
 })
 

@@ -89,8 +89,8 @@ import {
   MDBTabPane,
   MDBIcon
 } from "mdb-vue-ui-kit";
-import { ref } from "vue";
-import axios from "axios"; // Import axios library
+import { ref } from 'vue';
+import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 
 export default {
@@ -120,53 +120,29 @@ export default {
       passwordMismatch: false,
       serverError: null
     });
-
+    const store = useStore();
     const router = useRouter();
 
     const login = async () => {
-      try {
-        // const response = await axios.post("/login", {
-        //   email: form7LoginEmail.value,
-        //   password: form7LoginPassword.value
-        // });
+      await store.dispatch('login', {
+        email: form7LoginEmail.value,
+        password: form7LoginPassword.value
+      });
+      formValidationErrors.value.serverError = store.getters.getErrorByAction('login')
 
-        // Save the token and user data to localStorage or Vuex store
-        // localStorage.setItem("jwtToken", response.data.jwtToken);
-        // localStorage.setItem("userData", JSON.stringify(response.data.userData));
-        localStorage.setItem("jwtToken", 'abc');
-        localStorage.setItem("userData", JSON.stringify({ name: 'Artur A', username: 'archi' }));
-        router.push({ name: 'home' })
-      } catch (error) {
-        console.error("Login failed", error);
-
-        if (error.response && error.response.status === 422) {
-          formValidationErrors.value.serverError = "Invalid credentials. Please check your email and password.";
-        } else {
-          formValidationErrors.value.serverError = "An unexpected error occurred. Please try again later.";
-        }
-      }
+      router.push({ name: 'home' })
     };
 
     const register = async () => {
-      try {
-        const response = await axios.post("/registration", {
-          name: form7RegisterName.value,
+      await store.dispatch('register', {
+        name: form7RegisterName.value,
           username: form7RegisterUsername.value,
           email: form7RegisterEmail.value,
           password: form7RegisterPassword.value
-        });
+      });
+      formValidationErrors.value.serverError = store.getters.getErrorByAction('login')
 
-        localStorage.setItem("jwtToken", response.data.jwtToken);
-        localStorage.setItem("userData", JSON.stringify(response.data.userData));
-      } catch (error) {
-        console.error("Registration failed", error);
-
-        if (error.response && error.response.status === 422) {
-          formValidationErrors.value.serverError = "Invalid registration data. Please check your inputs.";
-        } else {
-          formValidationErrors.value.serverError = "An unexpected error occurred. Please try again later.";
-        }
-      }
+      router.push({ name: 'home' })
     };
 
     return {
