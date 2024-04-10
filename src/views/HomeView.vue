@@ -2,25 +2,26 @@
   <main>
     <Cards></Cards>
     <div class="d-grid gap-2 col-3 mx-auto new-access-btn">
-      <router-link to="/accesses/create" class="btn btn-primary">New Access</router-link>
+        <router-link to="/accesses/create" class="btn btn-primary"><MDBIcon icon="fas fa-plus"/></router-link>
     </div>
   </main>
 </template>
 
 <script>
 import Cards from '../components/Cards.vue'
-import { MDBBtn } from "mdb-vue-ui-kit";
+import { MDBBtn, MDBIcon } from "mdb-vue-ui-kit";
 
 export default {
   components: {
     Cards,
-    MDBBtn
+    MDBBtn,
+    MDBIcon
   }
 }
 </script>
 
 <style>
 .new-access-btn {
-  margin-top: 40px;
+  margin: 40px 0 20px 0;
 }
 </style>

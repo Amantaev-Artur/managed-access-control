@@ -1,4 +1,3 @@
-// store/index.js
 import { createStore } from 'vuex';
 import axios from 'axios';
 
@@ -9,7 +8,9 @@ const store = createStore({
       accesses: [],
       errors: {},
       groups: [],
-      selectedGroup: null
+      selectedGroup: null,
+      userInfo: {},
+      users: []
     };
   },
   mutations: {
@@ -24,6 +25,12 @@ const store = createStore({
     },
     setSelectedGroup(state, group) {
       state.selectedGroup = group;
+    },
+    setUserInfo(state, userInfo) {
+      state.userInfo = userInfo;
+    },
+    setUsers(state, users) {
+      state.users = users;
     },
     handleError(state, { action, error }) {
       state.errors[action] = error.message;
@@ -45,6 +52,8 @@ const store = createStore({
           const data = await response.data;
 
           localStorage.setItem('jwtToken', data.token);
+          localStorage.setItem('pubKey', data.pubKey);
+          localStorage.setItem('privKey', data.privKey);
           localStorage.setItem('userData', JSON.stringify(data.userData));
         } else {
           throw new Error('Invalid credentials');
@@ -68,12 +77,88 @@ const store = createStore({
           const data = await response.data;
 
           localStorage.setItem('jwtToken', data.token);
+          localStorage.setItem('pubKey', data.pubKey);
+          localStorage.setItem('privKey', data.privKey);
           localStorage.setItem('userData', JSON.stringify(data.userData));
         } else {
           throw new Error('Invalid registration data');
         }
       } catch (error) {
         commit('handleError', { action: 'register', error });
+      }
+    },
+    async userInfo({ commit }) {
+      try {
+        const token = localStorage.getItem('jwtToken');
+        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+
+        const response = await axios.get('http://localhost:3000/user_info');
+
+        commit('setUserInfo', response.data);
+      } catch (error) {
+        commit('handleError', { action: 'userInfo', error });
+      }
+    },
+
+    async addUserToGroup({ commit }, { groupId, userId }) {
+      try {
+        const token = localStorage.getItem('jwtToken');
+        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+
+        const response = await axios.post(`http://localhost:3000/groups/${groupId}/users/${userId}`);
+
+        if (response.status != 200) {
+          throw new Error('Invalid registration data');
+        }
+      } catch (error) {
+        commit('handleError', { action: 'addUserToGroup', error });
+      }
+    },
+
+    async updateGroup({ commit }, { groupId, name, description }) {
+      try {
+        const token = localStorage.getItem('jwtToken');
+        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+
+        const requestData = {
+          name: name,
+          description: description
+        };
+        const response = await axios.put(`http://localhost:3000/groups/${groupId}`, requestData);
+
+        if (response.status != 200) {
+          throw new Error('Invalid registration data');
+        }
+      } catch (error) {
+        commit('handleError', { action: 'addUserToGroup', error });
+      }
+    },
+
+    async removeUserFromGroup({ commit }, { groupId, userId }) {
+      try {
+        const token = localStorage.getItem('jwtToken');
+        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+
+        const response = await axios.delete(`http://localhost:3000/groups/${groupId}/users/${userId}`);
+
+        if (response.status != 200) {
+          throw new Error('Invalid registration data');
+        }
+      } catch (error) {
+        commit('handleError', { action: 'removeUserFromGroup', error });
+      }
+    },
+
+    async fetchUsers({ commit }) {
+      try {
+        const token = localStorage.getItem('jwtToken');
+        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+
+        const response = await axios.get('http://localhost:3000/users');
+
+        commit('setUsers', response.data);
+      } catch (error) {
+        commit('handleError', { action: 'fetchUsers', error });
       }
     },
 
@@ -85,6 +170,9 @@ const store = createStore({
           size: size,
           groupIds: groupIds
         };
+        const token = localStorage.getItem('jwtToken');
+        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+
         const response = await axios.post('http://localhost:3000/accesses', requestData);
 
         if (response.status != 200) {
@@ -103,27 +191,29 @@ const store = createStore({
           size: size,
           groupIds: groupIds
         };
+        const token = localStorage.getItem('jwtToken');
+        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+
         const response = await axios.put(`http://localhost:3000/accesses/${id}`, requestData);
 
         if (response.status != 200) {
           throw new Error('Invalid registration data');
         }
       } catch (error) {
-        commit('handleError', { action: 'createAccess', error });
+        commit('handleError', { action: 'updateAccess', error });
       }
     },
 
     async fetchAccess({ commit }, id) {
       try {
         const token = localStorage.getItem('jwtToken');
-
         axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 
         const response = await axios.get(`http://localhost:3000/accesses/${id}`);
 
         commit('setAccess', response.data);
       } catch (error) {
-        console.error('Ошибка при получении доступов:', error);
+        commit('handleError', { action: 'fetchAccess', error });
       }
     },
     async fetchAccesses({ commit }) {
@@ -136,10 +226,10 @@ const store = createStore({
 
         commit('setAccesses', response.data);
       } catch (error) {
-        console.error('Ошибка при получении доступов:', error);
+        commit('handleError', { action: 'fetchAccesses', error });
       }
     },
-    async fetchGroups({ commit }) {
+    async fetchGroups({ commit }, excludeGroupId = null) {
       try {
         const token = localStorage.getItem('jwtToken');
 
@@ -149,7 +239,7 @@ const store = createStore({
 
         commit('setGroups', response.data);
       } catch (error) {
-        console.error('Ошибка при получении групп:', error);
+        commit('handleError', { action: 'fetchGroups', error });
       }
     },
     async fetchGroupById({ commit }, id) {
@@ -162,7 +252,7 @@ const store = createStore({
 
         commit('setSelectedGroup', response.data);
       } catch (error) {
-        console.error('Ошибка при получении группы:', error);
+        commit('handleError', { action: 'fetchGroupById', error });
       }
     }
   },
@@ -181,6 +271,12 @@ const store = createStore({
     },
     getErrorByAction: (state) => (action) => {
       return state.errors[action] || null;
+    },
+    getUserInfo(state) {
+      return state.userInfo;
+    },
+    getUsers(state) {
+      return state.users;
     }
   }
 });

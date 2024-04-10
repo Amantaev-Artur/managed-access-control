@@ -1,12 +1,6 @@
 <template>
-  <div class="team">
-    <!-- Jumbotron -->
-    <div class="p-5 text-center">
-      <h1 class="mb-3">{{ team.name }}</h1>
-    <h4 class="mb-3">{{ team.description }}</h4>
-    </div>
-    <!-- Jumbotron -->
-    <teamComponent :users=team.users></teamComponent>
+  <div class="group">
+    <teamComponent :group="group" :onUsersUpdate="handleUserUpdate"></teamComponent>
   </div>
 </template>
 
@@ -16,27 +10,33 @@ import { ref, onMounted } from 'vue';
 import { useStore } from 'vuex';
 import { useRoute } from 'vue-router';
 
-const route = useRoute(); // Получаем маршрут с помощью useRoute()
+const route = useRoute();
 
 const store = useStore();
 
 const id = ref(null);
-const team = ref({
+const group = ref({
   users: [],
   name: '',
   description: ''
 });
 
-onMounted(async () => {
-  id.value = route.params.id; // Получаем id из параметров маршрута
+const handleUserUpdate = async () => {
+  await store.dispatch('fetchGroupById', id.value);
+  group.value = store.getters.getSelectedGroup;
+}
 
-  try {
-    await store.dispatch('fetchGroupById', id.value); // Выполняем действие fetchTeamData с передачей id
-    team.value = store.getters.getSelectedGroup;
-  } catch (error) {
-    console.error('Ошибка при загрузке данных о команде:', error);
-  }
+onMounted(async () => {
+  id.value = route.params.id;
+
+  await store.dispatch('fetchGroupById', id.value);
+  group.value = store.getters.getSelectedGroup;
+
 });
 </script>
 
-<style scoped></style>
+<style scoped>
+.group {
+  margin: 10px 40px;
+}
+</style>

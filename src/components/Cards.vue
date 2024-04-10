@@ -2,8 +2,9 @@
   <div class="cards-container">
     <div v-for="access in accesses" :key="access.id" :class="{ 'double-width': access.size === 'big' }"
       class="card-container">
-      <Card :cardHeader=access.data.serviceName :login=access.data.login :password=access.data.password
-        :cardFooter="moment(access.lastUpdate).format('DD.MM.YYYY HH:mm:ss')" :id=access.id />
+      <Card :cardHeader=access.data.serviceName :login=access.data.login :password="decryptData(access.data.password)"
+        :cardFooter="moment(access.lastUpdate).format('DD.MM.YYYY HH:mm:ss')" :id=access.id :color="access.data.color"
+        :canEdit="access.canEdit" />
     </div>
   </div>
 </template>
@@ -13,6 +14,7 @@ import Card from './Card.vue';
 import { useStore } from 'vuex';
 import { computed } from 'vue';
 import moment from 'moment';
+import { decryptData } from '../utils/encryption'
 
 export default {
   components: {
@@ -21,8 +23,7 @@ export default {
   setup() {
     const store = useStore();
     const accesses = computed(() => store.getters.getAccesses);
-
-    return { accesses, moment };
+    return { accesses, moment, decryptData };
   },
   async mounted() {
     const store = useStore();

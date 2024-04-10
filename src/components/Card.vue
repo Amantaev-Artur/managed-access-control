@@ -1,11 +1,11 @@
 <template>
-  <MDBCard bg="dark" text="white center">
+  <MDBCard :bg="color" text="white center">
     <MDBCardHeader class="card-header">
       {{ cardHeader }}
       <MDBDropdown v-model="dropdown1">
-        <MDBDropdownToggle size="sm" color="dark" @click="dropdown1 = !dropdown1">edit</MDBDropdownToggle>
+        <MDBDropdownToggle size="sm" :color="color" @click="dropdown1 = !dropdown1">Action</MDBDropdownToggle>
         <MDBDropdownMenu aria-labelledby="dropdownMenuButton">
-          <li>
+          <li v-if="canEdit">
             <router-link :to="`/accesses/${id}/edit`" class="dropdown-item">Edit</router-link>
           </li>
           <li>
@@ -34,7 +34,8 @@
         </div>
       </div>
     </MDBCardBody>
-    <MDBCardFooter class="text-muted" style="font-size: var(--subtitle-text-font-size)">{{ cardFooter }}</MDBCardFooter>
+    <MDBCardFooter class="font-monospace" style="font-size: var(--subtitle-text-font-size)">{{ cardFooter }}
+    </MDBCardFooter>
   </MDBCard>
 </template>
 
@@ -58,6 +59,13 @@ export default {
     cardHeader: {
       type: String,
       default: "Featured",
+    },
+    canEdit: {
+      type: Boolean
+    },
+    color: {
+      type: String,
+      default: 'dark'
     },
     login: {
       type: String,
@@ -126,7 +134,7 @@ export default {
   grid-template-columns: 1fr auto;
   /* Две колонки: одна занимает всю доступную ширину, вторая под кнопку */
   gap: 10px;
-  background-color: #282c34;
+  background-color: #191b1d;
   padding: 10px;
   border-radius: 5px;
 }

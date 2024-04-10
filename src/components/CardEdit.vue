@@ -33,6 +33,13 @@
           v-model="size" />
       </MDBBtnGroup>
 
+      <p class="fs-5">Выберите цвет карточки</p>
+      <div>
+        <MDBBtn v-for="color in colors" :key="color.id" :color="color.id == selectColor?.id ? color.outline : null"
+          :outline="color.id == selectColor?.id ? null : color.outline" rounded @click="changeColor(color)">{{
+    color.outline }}</MDBBtn>
+      </div>
+
       <p class="fs-5">Выберите группы</p>
       <MDBListGroup light>
         <MDBListGroupItem v-for="(group, index) in groups" :key="index" tag="a" href="#" ripple noBorder spacing action
@@ -56,9 +63,10 @@
 
 <script>
 import { MDBRow, MDBInput, MDBCheckbox, MDBBtn, MDBDropdown, MDBDropdownToggle, MDBDropdownMenu, MDBDropdownItem, MDBListGroup, MDBListGroupItem, MDBBadge, MDBRadio, MDBBtnGroup } from "mdb-vue-ui-kit";
-import { ref, computed, watchEffect } from "vue";
+import { ref } from "vue";
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
+import { decryptData, encryptData } from '../utils/encryption';
 
 export default {
   components: {
@@ -86,6 +94,17 @@ export default {
     let size = ref("small");
     const typeDropdown = ref(false);
     const options = ["login", "link", "text"];
+    const colors = ref([
+      { id: 1, outline: 'primary' },
+      { id: 2, outline: 'secondary' },
+      { id: 3, outline: 'success' },
+      { id: 4, outline: 'danger' },
+      { id: 5, outline: 'warning' },
+      { id: 6, outline: 'info' },
+      // { id: 7, outline: 'light' },
+      { id: 8, outline: 'dark' },
+    ])
+    const selectColor = ref(null);
     const selectedOption = ref("Select a type");
 
     const access = ref(null);
@@ -110,7 +129,7 @@ export default {
         access.value = newValue;
         serviceNameInput.value = ref(newValue?.data.serviceName).value
         loginInput.value = ref(newValue.data?.login).value
-        passwordInput.value = ref(newValue.data?.password).value
+        passwordInput.value = decryptData(ref(newValue.data?.password).value)
         size.value = ref(newValue.size).value
         selectedOption.value = ref(newValue.accessType.slug).value
         updateGroupsFromSaved()
@@ -121,8 +140,6 @@ export default {
       (newValue) => {
         groups.value = newValue;
         updateGroupsFromSaved()
-        // Обновление других переменных или выполнение логики
-        // в зависимости от полученных данных groups
       }
     );
     const isNested = (group) => group.parentId !== null;
@@ -148,8 +165,11 @@ export default {
       selectedOption.value = option;
     };
 
-    const createAccess = async (e) => {
+    const changeColor = (color) => {
+      selectColor.value = color
+    }
 
+    const createAccess = async (e) => {
       e.target.classList.add("was-validated");
       const isValidForm = [...e.target.elements].every(element => element.checkValidity());
       if (isValidForm) {
@@ -162,7 +182,8 @@ export default {
             data: {
               serviceName: serviceNameInput.value,
               login: loginInput.value,
-              password: passwordInput.value
+              password: encryptData(passwordInput.value),
+              color: selectColor.value?.outline
             },
             size: size.value,
             groupIds: groupIds
@@ -173,7 +194,8 @@ export default {
             data: {
               serviceName: serviceNameInput.value,
               login: loginInput.value,
-              password: passwordInput.value
+              password: passwordInput.value,
+              color: selectColor.value?.outline
             },
             size: size.value,
             groupIds: groupIds
@@ -195,6 +217,9 @@ export default {
       groups,
       isNested,
       calculateMargin,
+      colors,
+      changeColor,
+      selectColor,
       createAccess
     };
   },

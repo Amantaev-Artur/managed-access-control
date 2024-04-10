@@ -2,7 +2,7 @@
   <main>
     <div class="cards-container">
       <div class="card-container" v-if="access.id">
-        <Card :cardHeader=access?.data?.content :login=access?.data?.login :password=access?.data?.password
+        <Card :cardHeader=access?.data?.content :login=access?.data?.login :password="decryptData(access?.data?.password)"
           :cardFooter="moment(access?.last_update).format('DD.MM.YYYY HH:mm:ss')" :id=access?.id :canEdit="true"></Card>
       </div>
     </div>
@@ -15,6 +15,7 @@ import { useStore } from 'vuex';
 import { computed, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import moment from 'moment';
+import { decryptData } from '../utils/encryption'
 
 export default {
   components: {
@@ -24,7 +25,7 @@ export default {
     const store = useStore();
     const access = computed(() => store.getters.getAccess);
 
-    return { access, moment };
+    return { access, moment, decryptData };
   },
   async mounted() {
     const route = useRoute();
