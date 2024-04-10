@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import CardEdit from '../components/CardEdit.vue';
+import CardEdit from '../components/card/CardEdit.vue';
 import { useStore } from 'vuex';
 import { computed, ref } from 'vue';
 import { useRoute } from 'vue-router';

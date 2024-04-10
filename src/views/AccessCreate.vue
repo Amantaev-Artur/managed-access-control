@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import CardEdit from '../components/CardEdit.vue';
+import CardEdit from '../components/card/CardEdit.vue';
 
 export default {
   components: {

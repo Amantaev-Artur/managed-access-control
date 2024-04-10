@@ -108,7 +108,6 @@ export default {
     };
 
     const checkPassword = () => {
-      console.log(form7updateUserPasswordRepeat.value)
       return form7updateUserPasswordRepeat.value != '' && form7updateUserPassword.value != form7updateUserPasswordRepeat.value
     }
 

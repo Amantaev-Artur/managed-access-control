@@ -1,6 +1,6 @@
 <template>
   <div class="group">
-    <teamComponent :group="group" :onUsersUpdate="handleUserUpdate"></teamComponent>
+    <teamComponent :groupId="id"></teamComponent>
   </div>
 </template>
 
@@ -14,24 +14,10 @@ const route = useRoute();
 
 const store = useStore();
 
-const id = ref(null);
-const group = ref({
-  users: [],
-  name: '',
-  description: ''
-});
-
-const handleUserUpdate = async () => {
-  await store.dispatch('fetchGroupById', id.value);
-  group.value = store.getters.getSelectedGroup;
-}
+const id = route.params.id;
 
 onMounted(async () => {
-  id.value = route.params.id;
-
-  await store.dispatch('fetchGroupById', id.value);
-  group.value = store.getters.getSelectedGroup;
-
+  await store.dispatch('fetchGroupById', id);
 });
 </script>
 

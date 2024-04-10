@@ -14,38 +14,38 @@
   <div>
     <form v-if="selectedOption == 'login'" novalidate @submit.prevent="createAccess" class="mt-4 gy-5">
       <MDBInput inputGroup aria-label="Service name" aria-describedby="basic-addon1" placeholder="google.com"
-        v-model="serviceNameInput" invalidFeedback="Please choose a service name" validFeedback="Looks good!" required
-        wrapperClass="mb-4">
+        v-model="serviceNameInput" :invalidFeedback="$t('card.serviceName.invalid')"
+        :validFeedback="$t('card.serviceName.valid')" required wrapperClass="mb-4">
       </MDBInput>
 
       <div class="mb-4 p-3">
-        <MDBInput label="Login" v-model="loginInput" invalidFeedback="Please provide login" validFeedback="Looks good!"
-          required wrapperClass="mb-4" />
-        <MDBInput label="Password" v-model="passwordInput" invalidFeedback="Please provide password"
-          validFeedback="Looks good!" required wrapperClass="mb-4" />
+        <MDBInput :label="$t('card.login.label')" v-model="loginInput" :invalidFeedback="$t('card.login.invalid')"
+          :validFeedback="$t('card.login.valid')" required wrapperClass="mb-4" />
+        <MDBInput :label="$t('card.password.label')" v-model="passwordInput"
+          :invalidFeedback="$t('card.password.invalid')" :validFeedback="$t('card.password.valid')" required />
       </div>
 
-      <p class="fs-5">Выберите размер карточки</p>
+      <p class="fs-5">{{ $t('card.size.title') }}</p>
       <MDBBtnGroup class="mb-4">
-        <MDBRadio :btnCheck="true" :wrap="false" labelClass="btn btn-secondary" label="Small" name="options"
-          value="small" v-model="size" />
-        <MDBRadio :btnCheck="true" :wrap="false" labelClass="btn btn-secondary" label="Big" name="options" value="big"
-          v-model="size" />
+        <MDBRadio :btnCheck="true" :wrap="false" labelClass="btn btn-secondary" :label="$t('card.size.small')"
+          name="options" value="small" v-model="size" />
+        <MDBRadio :btnCheck="true" :wrap="false" labelClass="btn btn-secondary" :label="$t('card.size.big')"
+          name="options" value="big" v-model="size" />
       </MDBBtnGroup>
 
-      <p class="fs-5">Выберите цвет карточки</p>
+      <p class="fs-5">{{ $t('card.color.title') }}</p>
       <div>
         <MDBBtn v-for="color in colors" :key="color.id" :color="color.id == selectColor?.id ? color.outline : null"
           :outline="color.id == selectColor?.id ? null : color.outline" rounded @click="changeColor(color)">{{
     color.outline }}</MDBBtn>
       </div>
 
-      <p class="fs-5">Выберите группы</p>
+      <p class="fs-5 mt-3">{{ $t('card.groups.title') }}</p>
       <MDBListGroup light>
         <MDBListGroupItem v-for="(group, index) in groups" :key="index" tag="a" href="#" ripple noBorder spacing action
           :class="{ 'nested': isNested(group) }" class="d-flex justify-content-between align-items-start"
           @click="toggleCheckbox(group)"
-          :style="{ marginLeft: calculateMargin(group), width: `calc(100% - ${calculateMargin(group)})` }">
+          :style="{ marginLeft: calculateMargin(group, groups), width: `calc(100% - ${calculateMargin(group, groups)})` }">
           <div :class="{ 'ms-2': isNested(group), 'me-auto': true }">
             <div class="fw-bold">{{ group.name }}</div>
             {{ group.description }}
@@ -56,21 +56,30 @@
           </div>
         </MDBListGroupItem>
       </MDBListGroup>
-      <MDBBtn class="w-100" color="primary" type="submit">Save</MDBBtn>
+
+      <MDBBtn class="w-100 mb-5" color="primary" type="submit">Save</MDBBtn>
+      <DeleteModal :text="'Удалить карточку'" :deleteFunction="() => console.log('abc')" :modal="deleteModal"
+        @updateModal="(m) => { deleteModal = m }" />
     </form>
   </div>
+  <MDBBtn color="dark" class="delete-group-btn btn-lg" floating @click="deleteModal = true">
+    <MDBIcon icon="fas fa-trash" fw class="bg-dark"></MDBIcon>
+  </MDBBtn>
 </template>
 
 <script>
-import { MDBRow, MDBInput, MDBCheckbox, MDBBtn, MDBDropdown, MDBDropdownToggle, MDBDropdownMenu, MDBDropdownItem, MDBListGroup, MDBListGroupItem, MDBBadge, MDBRadio, MDBBtnGroup } from "mdb-vue-ui-kit";
+import { MDBInput, MDBCheckbox, MDBBtn, MDBDropdown, MDBDropdownToggle, MDBDropdownMenu, MDBDropdownItem, MDBListGroup, MDBListGroupItem, MDBBadge, MDBRadio, MDBBtnGroup, MDBIcon } from "mdb-vue-ui-kit";
+import DeleteModal from '../DeleteModal.vue'
 import { ref } from "vue";
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
-import { decryptData, encryptData } from '../utils/encryption';
+import { decryptData, encryptData } from '../../utils/encryption';
+import { calculateMargin, isNested } from '../../utils/treeCalculator';
+import { defaultColors, defaultTypes } from '../../constants/card';
 
 export default {
   components: {
-    MDBRow,
+    DeleteModal,
     MDBInput,
     MDBCheckbox,
     MDBDropdown,
@@ -82,7 +91,8 @@ export default {
     MDBListGroupItem,
     MDBBadge,
     MDBRadio,
-    MDBBtnGroup
+    MDBBtnGroup,
+    MDBIcon
   },
   setup() {
     const store = useStore();
@@ -93,18 +103,10 @@ export default {
     let passwordInput = ref("");
     let size = ref("small");
     const typeDropdown = ref(false);
-    const options = ["login", "link", "text"];
-    const colors = ref([
-      { id: 1, outline: 'primary' },
-      { id: 2, outline: 'secondary' },
-      { id: 3, outline: 'success' },
-      { id: 4, outline: 'danger' },
-      { id: 5, outline: 'warning' },
-      { id: 6, outline: 'info' },
-      // { id: 7, outline: 'light' },
-      { id: 8, outline: 'dark' },
-    ])
+    const options = defaultTypes;
+    const colors = ref(defaultColors)
     const selectColor = ref(null);
+    const deleteModal = ref(false);
     const selectedOption = ref("Select a type");
 
     const access = ref(null);
@@ -142,24 +144,6 @@ export default {
         updateGroupsFromSaved()
       }
     );
-    const isNested = (group) => group.parentId !== null;
-
-    const calculateMargin = (group) => {
-      const depth = calculateDepth(group.id);
-      return `${depth * 20}px`;
-    };
-
-    const calculateDepth = (groupId) => {
-      let depth = 0;
-      let currentGroup = groups.value.find(group => group.id === groupId);
-
-      while (currentGroup && currentGroup.parentId !== null) {
-        depth++;
-        currentGroup = groups.value.find(group => group.id === currentGroup.parentId);
-      }
-
-      return depth;
-    };
 
     const selectOption = (option) => {
       selectedOption.value = option;
@@ -220,7 +204,8 @@ export default {
       colors,
       changeColor,
       selectColor,
-      createAccess
+      createAccess,
+      deleteModal
     };
   },
   async mounted() {
@@ -243,6 +228,13 @@ export default {
 .type-dropdown,
 .type-dropdown-menu {
   width: 160px;
+}
+
+.delete-group-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 9999;
 }
 
 @media screen and (max-width: 1024px) {

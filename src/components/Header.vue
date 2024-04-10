@@ -6,9 +6,9 @@
     <MDBNavbarToggler target="#navbarColor01" @click="collapse7 = !collapse7"></MDBNavbarToggler>
     <MDBCollapse id="navbarColor01" v-model="collapse7">
       <MDBNavbarNav class="mb-2 mb-lg-0">
-        <router-link :to="{ path: '/' }" class="nav-link" active-class="active">Dashboard</router-link>
-        <router-link :to="{ path: '/teams' }" class="nav-link" active-class="active">Teams</router-link>
-        <router-link :to="{ path: '/projects' }" class="nav-link" active-class="active">Projects</router-link>
+        <router-link :to="{ path: '/' }" class="nav-link" active-class="active">{{ $t('header.dashboard') }}</router-link>
+        <router-link :to="{ path: '/teams' }" class="nav-link" active-class="active">{{ $t('header.teams') }}</router-link>
+        <router-link :to="{ path: '/projects' }" class="nav-link" active-class="active">{{ $t('header.projects') }}</router-link>
       </MDBNavbarNav>
     </MDBCollapse>
 
@@ -53,7 +53,6 @@ export default {
 
     const navigateTo = (endpoint) => {
       r = router.push({ name: 'teams' })
-      console.log(r)
     }
 
     return {

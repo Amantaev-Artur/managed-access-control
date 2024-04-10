@@ -115,14 +115,50 @@ const store = createStore({
       }
     },
 
-    async updateGroup({ commit }, { groupId, name, description }) {
+    async createGroup({ commit }, { name, description, parentId }) {
       try {
         const token = localStorage.getItem('jwtToken');
         axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 
         const requestData = {
           name: name,
-          description: description
+          description: description,
+          parentId: parentId
+        };
+        const response = await axios.post(`http://localhost:3000/groups`, requestData);
+
+        if (response.status != 200) {
+          throw new Error('Invalid registration data');
+        }
+      } catch (error) {
+        commit('handleError', { action: 'createGroup', error });
+      }
+    },
+
+    async deleteGroup({ commit }, { groupId }) {
+      try {
+        const token = localStorage.getItem('jwtToken');
+        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+
+        const response = await axios.delete(`http://localhost:3000/groups/${groupId}`);
+
+        if (response.status != 200) {
+          throw new Error('Invalid registration data');
+        }
+      } catch (error) {
+        commit('handleError', { action: 'deleteGroup', error });
+      }
+    },
+
+    async updateGroup({ commit }, { groupId, name, description, parentId }) {
+      try {
+        const token = localStorage.getItem('jwtToken');
+        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+
+        const requestData = {
+          name: name,
+          description: description,
+          parentId: parentId
         };
         const response = await axios.put(`http://localhost:3000/groups/${groupId}`, requestData);
 
@@ -130,7 +166,7 @@ const store = createStore({
           throw new Error('Invalid registration data');
         }
       } catch (error) {
-        commit('handleError', { action: 'addUserToGroup', error });
+        commit('handleError', { action: 'updateGroup', error });
       }
     },
 
@@ -180,6 +216,21 @@ const store = createStore({
         }
       } catch (error) {
         commit('handleError', { action: 'createAccess', error });
+      }
+    },
+
+    async deleteAccess({ commit }, { accessId }) {
+      try {
+        const token = localStorage.getItem('jwtToken');
+        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+
+        const response = await axios.delete(`http://localhost:3000/accesses/${accessId}`);
+
+        if (response.status != 200) {
+          throw new Error('Invalid registration data');
+        }
+      } catch (error) {
+        commit('handleError', { action: 'deleteAccess', error });
       }
     },
 
@@ -235,7 +286,7 @@ const store = createStore({
 
         axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 
-        const response = await axios.get('http://localhost:3000/groups');
+        const response = await axios.get('http://localhost:3000/groups', { params: { excludeGroupId: excludeGroupId } });
 
         commit('setGroups', response.data);
       } catch (error) {

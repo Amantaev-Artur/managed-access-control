@@ -1,15 +1,15 @@
 <template>
   <MDBCard :bg="color" text="white center">
     <MDBCardHeader class="card-header">
-      {{ cardHeader }}
+      {{ cardHeader || $t('card.header') }}
       <MDBDropdown v-model="dropdown1">
-        <MDBDropdownToggle size="sm" :color="color" @click="dropdown1 = !dropdown1">Action</MDBDropdownToggle>
+        <MDBDropdownToggle size="sm" :color="color" @click="dropdown1 = !dropdown1">{{ $t('card.action') }}</MDBDropdownToggle>
         <MDBDropdownMenu aria-labelledby="dropdownMenuButton">
           <li v-if="canEdit">
-            <router-link :to="`/accesses/${id}/edit`" class="dropdown-item">Edit</router-link>
+            <router-link :to="`/accesses/${id}/edit`" class="dropdown-item">{{ $t('card.edit') }}</router-link>
           </li>
           <li>
-            <router-link :to="`/accesses/${id}`" class="dropdown-item">Show</router-link>
+            <router-link :to="`/accesses/${id}`" class="dropdown-item">{{ $t('card.show') }}</router-link>
           </li>
         </MDBDropdownMenu>
       </MDBDropdown>
@@ -17,19 +17,19 @@
     <MDBCardBody>
       <div class="credential-container">
         <div class="credential">
-          <strong>Login:</strong>
+          <strong>{{ $t('card.login.title') }}</strong>
           <span class="credential-text">
             <span @click="copyToClipboard(login)">{{ login }}</span>
-            <MDBBtn size="sm" @click="copyToClipboard(login)" color="success">Copy</MDBBtn>
+            <MDBBtn size="sm" @click="copyToClipboard(login)" color="success">{{ $t('card.copy') }}</MDBBtn>
           </span>
         </div>
         <div class="credential">
-          <strong>Password:</strong>
+          <strong>{{ $t('card.password.title') }}</strong>
           <span class="credential-text">
             <span @click="togglePasswordVisibility">
               {{ isHidden ? '************' : password }}
             </span>
-            <MDBBtn size="sm" @click="copyToClipboard(password)" color="success">Copy</MDBBtn>
+            <MDBBtn size="sm" @click="copyToClipboard(password)" color="success">{{ $t('card.copy') }}</MDBBtn>
           </span>
         </div>
       </div>
@@ -40,7 +40,7 @@
 </template>
 
 <script>
-import { MDBCard, MDBCardHeader, MDBCardBody, MDBBtn, MDBCardFooter, MDBDropdown, MDBDropdownToggle, MDBDropdownMenu, MDBDropdownItem } from "mdb-vue-ui-kit";
+import { MDBCard, MDBCardHeader, MDBCardBody, MDBBtn, MDBCardFooter, MDBDropdown, MDBDropdownToggle, MDBDropdownMenu } from "mdb-vue-ui-kit";
 import { ref } from 'vue';
 
 export default {
@@ -52,13 +52,11 @@ export default {
     MDBCardFooter,
     MDBDropdown,
     MDBDropdownToggle,
-    MDBDropdownMenu,
-    MDBDropdownItem
+    MDBDropdownMenu
   },
   props: {
     cardHeader: {
-      type: String,
-      default: "Featured",
+      type: String
     },
     canEdit: {
       type: Boolean

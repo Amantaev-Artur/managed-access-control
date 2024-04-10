@@ -1,75 +1,55 @@
 <template>
   <div>
-    <MDBTabs v-model="form7ActiveTab">
+    <MDBTabs v-model="loginTab">
       <MDBTabNav pills justify tabsClasses="mb-3">
-        <MDBTabItem tabId="form7-login" href="form7-login">Login</MDBTabItem>
-        <MDBTabItem tabId="form7-register" href="form7-register">Register</MDBTabItem>
+        <MDBTabItem tabId="form-login" href="form-login">{{ $t('login.loginTitle') }}</MDBTabItem>
+        <MDBTabItem tabId="form-register" href="form-register">{{ $t('login.registerTitle') }}</MDBTabItem>
       </MDBTabNav>
 
       <MDBTabContent>
-        <MDBTabPane tabId="form7-login">
-          <form @submit.prevent="login">
-            <MDBInput type="email" label="Email address" id="form7LoginEmail" v-model="form7LoginEmail"
-              wrapperClass="mb-4" />
+        <MDBTabPane tabId="form-login">
+          <form @submit.prevent="login" novalidate>
+            <MDBInput type="email" :label="$t('login.email.label')" id="formLoginEmail" v-model="formLoginEmail"
+              wrapperClass="mb-5" :invalidFeedback="$t('login.email.invalid')" required />
 
-            <MDBInput type="password" label="Password" id="form7LoginPassword" v-model="form7LoginPassword"
-              wrapperClass="mb-4" />
+            <MDBInput type="password" :label="$t('login.password.label')" id="formLoginPassword"
+              v-model="formLoginPassword" wrapperClass="mb-3" :isValid="false" :isValidated="checkValid()" minLength="8"
+              :invalidFeedback="$t('login.password.invalid')" required />
+
+            <MDBBtn color="primary" block class="mt-3" type="submit">{{ $t('login.signIn') }}</MDBBtn>
 
             <MDBRow class="mb-4">
-              <MDBCol class="d-flex justify-content-center">
-                <MDBCheckbox label="Remember me" id="form7LoginCheck" v-model="form7LoginCheck"
-                  wrapperClass="mb-3 mb-md-0" />
-              </MDBCol>
-
               <MDBCol>
-                <a href="#!">Forgot password?</a>
+                <a href="#!">{{ $t('login.forgotPassword') }}</a>
               </MDBCol>
             </MDBRow>
-
-            <MDBBtn color="primary" block class="mb-4" type="submit"> Sign in </MDBBtn>
-
-            <!-- TODO: накинуть стилей -->
-            <MDBAlert v-if="formValidationErrors.serverError" color="danger" dismissible class="my-3"
-              style="font-weight: bold; text-align: center;">
-              {{ formValidationErrors.serverError }}
-            </MDBAlert>
-
-            <div class="text-center">
-              <p>Not a member? <a href="#!">Register</a></p>
-            </div>
           </form>
         </MDBTabPane>
-        <MDBTabPane tabId="form7-register">
+        <MDBTabPane tabId="form-register">
           <form @submit.prevent="register">
-            <MDBInput type="text" label="Name" id="form7RegisterName" v-model="form7RegisterName" wrapperClass="mb-4" />
+            <MDBInput type="text" :label="$t('login.name.label')" id="formRegisterName" v-model="formRegisterName"
+              wrapperClass="mb-4" :invalidFeedback="$t('login.name.invalid')" required />
 
-            <MDBInput type="text" label="Username" id="form7RegisterUsername" v-model="form7RegisterUsername"
-              wrapperClass="mb-4" />
+            <MDBInput type="text" :label="$t('login.username.label')" id="formRegisterUsername"
+              v-model="formRegisterUsername" wrapperClass="mb-4" :invalidFeedback="$t('login.username.invalid')"
+              required />
 
-            <MDBInput type="email" label="Email" id="form7RegisterEmail" v-model="form7RegisterEmail"
-              wrapperClass="mb-4" />
+            <MDBInput type="email" :label="$t('login.email.label')" id="formRegisterEmail" v-model="formRegisterEmail"
+              wrapperClass="mb-4" :invalidFeedback="$t('login.email.invalid')" required />
 
-            <MDBInput type="password" label="Password" id="form7RegisterPassword" v-model="form7RegisterPassword"
-              wrapperClass="mb-4" />
+            <MDBInput type="password" :label="$t('login.password.label')" id="formRegisterPassword"
+              v-model="formRegisterPassword" wrapperClass="mb-4" :invalidFeedback="$t('login.password.invalid')"
+              required />
 
-            <MDBInput type="password" label="Repeat password" id="form7RegisterPasswordRepeat"
-              v-model="form7RegisterPasswordRepeat" wrapperClass="mb-4"
-              :class="{ 'is-invalid': formValidationErrors.passwordMismatch }" />
-            <small v-if="formValidationErrors.passwordMismatch" class="text-danger">
-              Passwords do not match.
-            </small>
-            <MDBCheckbox label="I have read and agree to the terms" id="form7RegsiterTermsCheck"
-              v-model="form7RegsiterTermsCheck" wrapperClass="d-flex justify-content-center mb-4" />
+            <MDBInput type="password" :label="$t('login.passwordRepeat.label')" id="formRegisterPasswordRepeat"
+              v-model="formRegisterPasswordRepeat" wrapperClass="mb-4" :isValid="false" :isValidated="checkRepeatPassword()"
+              :invalidFeedback="$t('login.passwordRepeat.invalid')" required />
+            <MDBCheckbox label="I have read and agree to the terms" id="formRegsiterTermsCheck"
+              v-model="formRegsiterTermsCheck" wrapperClass="d-flex justify-content-center mb-4" />
 
             <MDBBtn color="primary" block class="mb-3" type="submit">
               Sign in
             </MDBBtn>
-
-            <!-- TODO: накинуть стилей -->
-            <MDBAlert v-if="formValidationErrors.serverError" color="danger" dismissible class="my-3"
-              style="font-weight: bold; text-align: center;">
-              {{ formValidationErrors.serverError }}
-            </MDBAlert>
           </form>
         </MDBTabPane>
       </MDBTabContent>
@@ -106,57 +86,69 @@ export default {
     MDBIcon
   },
   setup() {
-    const form7ActiveTab = ref("form7-login");
-    const form7LoginEmail = ref("");
-    const form7LoginPassword = ref("");
-    const form7LoginCheck = ref(true);
-    const form7RegisterName = ref("");
-    const form7RegisterUsername = ref("");
-    const form7RegisterEmail = ref("");
-    const form7RegisterPassword = ref("");
-    const form7RegisterPasswordRepeat = ref("");
-    const form7RegsiterTermsCheck = ref(true);
-    const formValidationErrors = ref({
-      passwordMismatch: false,
-      serverError: null
-    });
+    const loginTab = ref("form-login");
+    const formLoginEmail = ref("");
+    const formLoginPassword = ref("");
+    const formLoginCheck = ref(true);
+    const formRegisterName = ref("");
+    const formRegisterUsername = ref("");
+    const formRegisterEmail = ref("");
+    const formRegisterPassword = ref("");
+    const formRegisterPasswordRepeat = ref("");
+    const formRegsiterTermsCheck = ref(true);
+
+    const isResponseValid = ref(false);
+
     const store = useStore();
     const router = useRouter();
 
-    const login = async () => {
-      await store.dispatch('login', {
-        email: form7LoginEmail.value,
-        password: form7LoginPassword.value
-      });
-      formValidationErrors.value.serverError = store.getters.getErrorByAction('login')
+    const login = async (e) => {
+      e.target.classList.add("was-validated");
+      const isValidForm = [...e.target.elements].every(element => element.checkValidity());
 
-      router.push({ name: 'home' })
+      if (isValidForm) {
+        await store.dispatch('login', {
+          email: formLoginEmail.value,
+          password: formLoginPassword.value
+        });
+        if (store.getters.getErrorByAction('login')) {
+          isResponseValid.value = true
+        }
+        router.push({ name: 'home' })
+      }
     };
 
     const register = async () => {
       await store.dispatch('register', {
-        name: form7RegisterName.value,
-          username: form7RegisterUsername.value,
-          email: form7RegisterEmail.value,
-          password: form7RegisterPassword.value
+        name: formRegisterName.value,
+        username: formRegisterUsername.value,
+        email: formRegisterEmail.value,
+        password: formRegisterPassword.value
       });
-      formValidationErrors.value.serverError = store.getters.getErrorByAction('login')
-
       router.push({ name: 'home' })
     };
 
+    const checkValid = () => {
+      return isResponseValid.value;
+    }
+
+    const checkRepeatPassword = () => {
+      return formRegisterPasswordRepeat.value != '' && formRegisterPassword.value != formRegisterPasswordRepeat.value
+    }
+
     return {
-      form7ActiveTab,
-      form7LoginEmail,
-      form7LoginPassword,
-      form7LoginCheck,
-      form7RegisterName,
-      form7RegisterUsername,
-      form7RegisterEmail,
-      form7RegisterPassword,
-      form7RegisterPasswordRepeat,
-      form7RegsiterTermsCheck,
-      formValidationErrors,
+      checkValid,
+      checkRepeatPassword,
+      loginTab,
+      formLoginEmail,
+      formLoginPassword,
+      formLoginCheck,
+      formRegisterName,
+      formRegisterUsername,
+      formRegisterEmail,
+      formRegisterPassword,
+      formRegisterPasswordRepeat,
+      formRegsiterTermsCheck,
       login,
       register
     };
