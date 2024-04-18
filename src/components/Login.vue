@@ -66,8 +66,7 @@ import {
   MDBTabNav,
   MDBTabContent,
   MDBTabItem,
-  MDBTabPane,
-  MDBIcon
+  MDBTabPane
 } from "mdb-vue-ui-kit";
 import { ref } from 'vue';
 import { useStore } from 'vuex';
@@ -82,8 +81,7 @@ export default {
     MDBTabNav,
     MDBTabContent,
     MDBTabItem,
-    MDBTabPane,
-    MDBIcon
+    MDBTabPane
   },
   setup() {
     const loginTab = ref("form-login");

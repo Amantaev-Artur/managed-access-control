@@ -35,7 +35,7 @@
         </div>
         <div class="col-md-4 ps-4 border-start">
           <MDBListGroup light>
-            <MDBListGroupItem v-for="user in users" class="d-flex justify-content-between align-items-center">
+            <MDBListGroupItem v-for="user in users" :key="user.id" class="d-flex justify-content-between align-items-center">
               <div class="d-flex align-items-center">
                 <img :src="user.image || '/public/user.svg'" style="width: 45px; height: 45px"
                   class="rounded-circle" />

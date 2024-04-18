@@ -54,9 +54,6 @@ export default {
     MDBModalFooter
   },
   props: {
-    allUsers: {
-      type: Array
-    },
     group: {
       type: Object
     },
@@ -94,7 +91,7 @@ export default {
     return {
       userModal,
       allUsers,
-      group,
+      group, // eslint-disable-line
       addUserToGroup
     }
   },

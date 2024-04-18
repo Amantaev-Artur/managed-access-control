@@ -61,7 +61,7 @@
     <MDBIcon icon="fas fa-trash" fw class="bg-dark"></MDBIcon>
   </MDBBtn>
 
-  <UserListModal :allUsers="allUsers" :group="group" :modal="userModal"
+  <UserListModal :group="group" :modal="userModal"
     @updateModal="(modal) => { userModal = modal }" />
   <DeleteModal :text="$t('group.delete')" :textBody="$t('group.deleteBody')" :modal="deleteModal" :deleteFunction="deleteGroup"
     @updateModal="(modal) => { deleteModal = modal }" />
@@ -106,7 +106,6 @@ export default {
     const deleteModal = ref(false);
     const selectedParentGroup = ref(null);
     const buttonData = ref({ color: 'primary', state: 'default' });
-    const allUsers = computed(() => store.getters.getUsers);
     const groups = computed(() => store.getters.getGroups);
     const toggleTable = () => {
       isTableVisible.value = !isTableVisible.value;
@@ -180,7 +179,6 @@ export default {
 
     return {
       addUserToGroup,
-      allUsers,
       buttonData,
       userModal,
       deleteModal,

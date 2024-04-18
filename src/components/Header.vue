@@ -27,12 +27,8 @@
 <script>
 import {
   MDBNavbar,
-  MDBNavbarItem,
-  MDBNavbarBrand,
   MDBNavbarNav,
   MDBNavbarToggler,
-  MDBBadge,
-  MDBIcon,
   MDBCollapse
 } from 'mdb-vue-ui-kit';
 import { ref } from "vue";
@@ -40,12 +36,8 @@ import { ref } from "vue";
 export default {
   components: {
     MDBNavbar,
-    MDBNavbarItem,
-    MDBNavbarBrand,
     MDBNavbarNav,
     MDBNavbarToggler,
-    MDBBadge,
-    MDBIcon,
     MDBCollapse
   },
   setup() {

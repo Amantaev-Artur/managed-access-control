@@ -12,7 +12,7 @@
 <script>
 import Card from '../components/Card.vue';
 import { useStore } from 'vuex';
-import { computed, ref } from 'vue';
+import { computed } from 'vue';
 import { useRoute } from 'vue-router';
 import moment from 'moment';
 import { decryptData } from '../utils/encryption'

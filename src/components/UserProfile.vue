@@ -33,7 +33,7 @@
       <MDBFile class="mb-4" v-model="image" :label="$t('cabinet.imageInput')" accept="image/png,image/jpeg" required />
 
       <p class="fs-5">{{ $t('card.size.title') }}</p>
-      <MDBBtnGroup v-for="lang in languages" class="mb-4">
+      <MDBBtnGroup v-for="(lang, index) in languages" :key="index" class="mb-4">
         <MDBRadio @click="changeLanguage(lang)" :btnCheck="true" :wrap="false" labelClass="btn btn-secondary"
           :label="$t(`cabinet.language.${lang}`)" name="options" :value="lang" v-model="language" />
       </MDBBtnGroup>
@@ -52,13 +52,7 @@
 <script>
 import {
   MDBInput,
-  MDBCheckbox,
   MDBBtn,
-  MDBTabs,
-  MDBTabNav,
-  MDBTabContent,
-  MDBTabItem,
-  MDBTabPane,
   MDBIcon,
   MDBFile,
   MDBBtnGroup,
@@ -74,13 +68,7 @@ import i18n from '../locales'
 export default {
   components: {
     MDBInput,
-    MDBCheckbox,
     MDBBtn,
-    MDBTabs,
-    MDBTabNav,
-    MDBTabContent,
-    MDBTabItem,
-    MDBTabPane,
     MDBIcon,
     MDBFile,
     MDBBtnGroup,

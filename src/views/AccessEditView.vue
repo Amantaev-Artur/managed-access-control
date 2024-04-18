@@ -1,13 +1,13 @@
 <template>
   <div class="access-edit">
-    <CardEdit :size="access.size", :login="access.data?.login"></CardEdit>
+    <CardEdit :size="access.size" :login="access.data?.login"/>
   </div>
 </template>
 
 <script>
 import CardEdit from '../components/card/CardEdit.vue';
 import { useStore } from 'vuex';
-import { computed, ref } from 'vue';
+import { computed } from 'vue';
 import { useRoute } from 'vue-router';
 import moment from 'moment';
 

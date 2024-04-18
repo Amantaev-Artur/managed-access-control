@@ -9,12 +9,11 @@
 
 <script>
 import Cards from '../components/Cards.vue'
-import { MDBBtn, MDBIcon } from "mdb-vue-ui-kit";
+import { MDBIcon } from "mdb-vue-ui-kit";
 
 export default {
   components: {
     Cards,
-    MDBBtn,
     MDBIcon
   }
 }

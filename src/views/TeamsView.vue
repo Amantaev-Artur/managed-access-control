@@ -11,12 +11,11 @@
 
 <script>
 import Teams from '../components/Teams.vue';
-import { MDBBtn, MDBIcon } from "mdb-vue-ui-kit";
+import { MDBIcon } from "mdb-vue-ui-kit";
 
 export default {
   components: {
     Teams,
-    MDBBtn,
     MDBIcon
   }
 }
