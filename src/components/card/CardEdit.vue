@@ -35,12 +35,13 @@
 
       <p class="fs-5">{{ $t('card.color.title') }}</p>
       <div>
-        <MDBBtn v-for="color in colors" :key="color.id" :color="color.id == selectColor?.id ? color.outline : null"
-          :outline="color.id == selectColor?.id ? null : color.outline" rounded @click="changeColor(color)">{{
+        <MDBBtn v-for="color in colors" :key="color.id"
+          :color="color.outline == selectColor?.outline ? color.outline : null"
+          :outline="color.outline == selectColor?.outline ? null : color.outline" rounded @click="changeColor(color)">{{
     color.outline }}</MDBBtn>
       </div>
 
-      <p class="fs-5 mt-3">{{ $t('card.groups.title') }}</p>
+      <p class="fs-5 mt-4 mb-0">{{ $t('card.groups.title') }}</p>
       <MDBListGroup light>
         <MDBListGroupItem v-for="(group, index) in groups" :key="index" tag="a" href="#" ripple noBorder spacing action
           :class="{ 'nested': isNested(group) }" class="d-flex justify-content-between align-items-start"
@@ -58,7 +59,7 @@
       </MDBListGroup>
 
       <MDBBtn class="w-100 mb-5" color="primary" type="submit">Save</MDBBtn>
-      <DeleteModal :text="'Удалить карточку'" :deleteFunction="() => console.log('abc')" :modal="deleteModal"
+      <DeleteModal :text="'Удалить карточку'" :deleteFunction="deleteCard" :modal="deleteModal"
         @updateModal="(m) => { deleteModal = m }" />
     </form>
   </div>
@@ -132,6 +133,7 @@ export default {
         serviceNameInput.value = ref(newValue?.data.serviceName).value
         loginInput.value = ref(newValue.data?.login).value
         passwordInput.value = decryptData(ref(newValue.data?.password).value)
+        selectColor.value = { outline: ref(newValue.data?.color).value }
         size.value = ref(newValue.size).value
         selectedOption.value = ref(newValue.accessType.slug).value
         updateGroupsFromSaved()
@@ -189,6 +191,13 @@ export default {
       };
     }
 
+    const deleteCard = async () => {
+      await store.dispatch('deleteAccess', {
+        accessId: access.value.id
+      });
+      router.push({ name: 'home' })
+    }
+
     return {
       serviceNameInput,
       loginInput,
@@ -205,7 +214,8 @@ export default {
       changeColor,
       selectColor,
       createAccess,
-      deleteModal
+      deleteModal,
+      deleteCard
     };
   },
   async mounted() {

@@ -1,21 +1,23 @@
 <template>
-  <MDBNavbar container expand="lg" bg="light" class="d-flex justify-content-between">
-    <MDBNavbarBrand>
+  <MDBNavbar expand="lg" bg="light" class="d-flex justify-content-between" container>
+    <!-- <MDBNavbarBrand>
       <MDBIcon icon="mdb" iconStyle="fab" size="2x" />
-    </MDBNavbarBrand>
-    <MDBNavbarToggler target="#navbarColor01" @click="collapse7 = !collapse7"></MDBNavbarToggler>
-    <MDBCollapse id="navbarColor01" v-model="collapse7">
+    </MDBNavbarBrand> -->
+    <MDBNavbarToggler target="#navbarColor01" @click="collapse = !collapse"></MDBNavbarToggler>
+    <MDBCollapse id="navbarColor01" v-model="collapse">
       <MDBNavbarNav class="mb-2 mb-lg-0">
-        <router-link :to="{ path: '/' }" class="nav-link" active-class="active">{{ $t('header.dashboard') }}</router-link>
-        <router-link :to="{ path: '/teams' }" class="nav-link" active-class="active">{{ $t('header.teams') }}</router-link>
-        <router-link :to="{ path: '/projects' }" class="nav-link" active-class="active">{{ $t('header.projects') }}</router-link>
+        <router-link :to="{ path: '/' }" class="nav-link" active-class="active">{{ $t('header.dashboard')
+          }}</router-link>
+        <router-link :to="{ path: '/teams' }" class="nav-link" active-class="active">{{ $t('header.teams')
+          }}</router-link>
+        <router-link :to="{ path: '/project' }" class="nav-link" active-class="active">{{ $t('header.project')
+          }}</router-link>
       </MDBNavbarNav>
     </MDBCollapse>
 
-    <MDBNavbarNav class="mb-2 mb-lg-0 d-flex flex-row">
-      <router-link :to="{ path: '/cabinet' }" class="nav-link me-3 me-lg-0">
-        <img src="https://mdbootstrap.com/img/Photos/Avatars/img (31).jpg" class="rounded-circle" height="22" alt=""
-          loading="lazy" />
+    <MDBNavbarNav class="mb-2 mb-lg-0 d-flex flex-row user-img">
+      <router-link :to="{ path: '/cabinet' }" class="nav-link me-lg-0">
+        <img :src="img" class="rounded-circle border border-primary" width="40" height="40" alt="" loading="lazy" />
       </router-link>
     </MDBNavbarNav>
 
@@ -34,7 +36,6 @@ import {
   MDBCollapse
 } from 'mdb-vue-ui-kit';
 import { ref } from "vue";
-import { useRouter } from 'vue-router';
 
 export default {
   components: {
@@ -48,17 +49,27 @@ export default {
     MDBCollapse
   },
   setup() {
-    const collapse7 = ref(false);
-    const router = useRouter();
-
-    const navigateTo = (endpoint) => {
-      r = router.push({ name: 'teams' })
-    }
+    const collapse = ref(false);
+    const img = JSON.parse(localStorage.getItem('userData')).image || '/public/user.svg';
 
     return {
-      collapse7,
-      navigateTo
+      img,
+      collapse
     }
   }
 };
 </script>
+
+<style scoped>
+@media screen and (max-width: 1024px) {
+
+  .navbar-brand {
+    display: none;
+  }
+
+  .user-img {
+    margin-right: 0 !important;
+    margin-bottom: 0 !important;
+  }
+}
+</style>

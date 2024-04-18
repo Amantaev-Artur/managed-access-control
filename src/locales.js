@@ -9,8 +9,9 @@ const messages = {
 };
 
 const i18n = createI18n({
-  locale: 'ru', // Начальная локаль
-  messages
+  locale: localStorage.getItem('language') || 'ru', // Начальная локаль
+  messages,
+  legacy: false
 });
 
 export default i18n;

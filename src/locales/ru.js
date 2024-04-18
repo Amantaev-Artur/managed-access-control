@@ -1,7 +1,5 @@
 // ru.js
 export default {
-  welcome: 'Добро пожаловать',
-  greeting: 'Привет, {name}!',
   delete: 'Удалить',
   deleteBody: 'Вы действительно хотите удалить данный ресурс?',
   card: {
@@ -60,9 +58,10 @@ export default {
   header: {
     dashboard: 'Главная',
     teams: 'Команды',
-    projects: 'Проекты'
+    project: 'Проект'
   },
   login: {
+    agreeCheckbox: 'Даю согласие на обработку моих персональных данных',
     email: {
       label: 'Электронная почта',
       invalid: 'Некорректный логин'
@@ -85,8 +84,39 @@ export default {
     },
     forgotPassword: 'Забыли пароль?',
     signIn: 'Войти',
-    loginTitle: 'Войти',
-    registerTitle: 'Зарегистрироваться'
+    register: 'Зарегистрироваться'
+  },
+  cabinet: {
+    language: {
+      en: 'English',
+      ru: 'Русский'
+    },
+    email: {
+      label: 'Электронная почта',
+      invalid: 'Некорректный логин'
+    },
+    oldPassword: {
+      label: 'Текущий пароль',
+      invalid: 'Неправильный логин/пароль'
+    },
+    password: {
+      label: 'Новый пароль',
+      invalid: 'Неправильный логин/пароль'
+    },
+    passwordRepeat: {
+      label: 'Повторите новый пароль',
+      invalid: 'Пароли не совпадают'
+    },
+    name: {
+      label: 'Имя',
+      invalid: 'Некорректное имя пользователя'
+    },
+    username: {
+      label: 'Никнейм',
+      invalid: 'Некорректное значение'
+    },
+    save: 'Сохранить',
+    imageInput: 'Загрузите картинку для вашего профиля'
   },
   userList: {
     action: 'Действие',

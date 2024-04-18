@@ -108,9 +108,6 @@ export default {
       textarea.select();
       document.execCommand('copy');
       document.body.removeChild(textarea);
-    },
-    deleteAccess(id) {
-      console.log(id)
     }
   },
 };

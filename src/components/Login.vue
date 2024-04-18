@@ -2,8 +2,8 @@
   <div>
     <MDBTabs v-model="loginTab">
       <MDBTabNav pills justify tabsClasses="mb-3">
-        <MDBTabItem tabId="form-login" href="form-login">{{ $t('login.loginTitle') }}</MDBTabItem>
-        <MDBTabItem tabId="form-register" href="form-register">{{ $t('login.registerTitle') }}</MDBTabItem>
+        <MDBTabItem tabId="form-login" href="form-login">{{ $t('login.signIn') }}</MDBTabItem>
+        <MDBTabItem tabId="form-register" href="form-register">{{ $t('login.register') }}</MDBTabItem>
       </MDBTabNav>
 
       <MDBTabContent>
@@ -26,7 +26,7 @@
           </form>
         </MDBTabPane>
         <MDBTabPane tabId="form-register">
-          <form @submit.prevent="register">
+          <form @submit.prevent="register" novalidate>
             <MDBInput type="text" :label="$t('login.name.label')" id="formRegisterName" v-model="formRegisterName"
               wrapperClass="mb-4" :invalidFeedback="$t('login.name.invalid')" required />
 
@@ -39,16 +39,16 @@
 
             <MDBInput type="password" :label="$t('login.password.label')" id="formRegisterPassword"
               v-model="formRegisterPassword" wrapperClass="mb-4" :invalidFeedback="$t('login.password.invalid')"
-              required />
+              required minLength="8" />
 
             <MDBInput type="password" :label="$t('login.passwordRepeat.label')" id="formRegisterPasswordRepeat"
-              v-model="formRegisterPasswordRepeat" wrapperClass="mb-4" :isValid="false" :isValidated="checkRepeatPassword()"
-              :invalidFeedback="$t('login.passwordRepeat.invalid')" required />
-            <MDBCheckbox label="I have read and agree to the terms" id="formRegsiterTermsCheck"
-              v-model="formRegsiterTermsCheck" wrapperClass="d-flex justify-content-center mb-4" />
+              v-model="formRegisterPasswordRepeat" wrapperClass="mb-4" :isValid="false"
+              :isValidated="checkRepeatPassword()" :invalidFeedback="$t('login.passwordRepeat.invalid')" required />
+            <MDBCheckbox :label="$t('login.agreeCheckbox')" id="formRegsiterTermsCheck"
+              v-model="formRegsiterTermsCheck" wrapperClass="d-flex justify-content-center mb-4" required/>
 
             <MDBBtn color="primary" block class="mb-3" type="submit">
-              Sign in
+              {{ $t('login.register') }}
             </MDBBtn>
           </form>
         </MDBTabPane>
@@ -95,9 +95,8 @@ export default {
     const formRegisterEmail = ref("");
     const formRegisterPassword = ref("");
     const formRegisterPasswordRepeat = ref("");
-    const formRegsiterTermsCheck = ref(true);
-
-    const isResponseValid = ref(false);
+    const formRegsiterTermsCheck = ref(false);
+    const isResponseValid = ref(true);
 
     const store = useStore();
     const router = useRouter();
@@ -112,24 +111,36 @@ export default {
           password: formLoginPassword.value
         });
         if (store.getters.getErrorByAction('login')) {
-          isResponseValid.value = true
+          isResponseValid.value = false
+          await store.dispatch('clearError', 'login')
+        } else {
+          router.push({ name: 'home' })
         }
-        router.push({ name: 'home' })
       }
     };
 
-    const register = async () => {
-      await store.dispatch('register', {
-        name: formRegisterName.value,
-        username: formRegisterUsername.value,
-        email: formRegisterEmail.value,
-        password: formRegisterPassword.value
-      });
-      router.push({ name: 'home' })
+    const register = async (e) => {
+      e.target.classList.add("was-validated");
+      const isValidForm = [...e.target.elements].every(element => element.checkValidity());
+
+      if (isValidForm) {
+        await store.dispatch('register', {
+          name: formRegisterName.value,
+          username: formRegisterUsername.value,
+          email: formRegisterEmail.value,
+          password: formRegisterPassword.value
+        });
+        if (store.getters.getErrorByAction('register')) {
+          isResponseValid.value = false
+          store.dispatch('clearError', 'register')
+        } else {
+          router.push({ name: 'home' })
+        }
+      }
     };
 
     const checkValid = () => {
-      return isResponseValid.value;
+      return !isResponseValid.value;
     }
 
     const checkRepeatPassword = () => {

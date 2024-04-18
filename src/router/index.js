@@ -18,21 +18,21 @@ const router = createRouter({
     {
       path: '/accesses/create',
       name: 'accessCreate',
-      component: () => import('../views/AccessCreate.vue'),
+      component: () => import('../views/AccessCreateView.vue'),
       props: true,
       meta: { requiresAuth: true }
     },
     {
       path: '/accesses/:id',
       name: 'access',
-      component: () => import('../views/Access.vue'),
+      component: () => import('../views/AccessView.vue'),
       props: true,
       meta: { requiresAuth: true }
     },
     {
       path: '/accesses/:id/edit',
       name: 'accessEdit',
-      component: () => import('../views/AccessEdit.vue'),
+      component: () => import('../views/AccessEditView.vue'),
       props: true,
       meta: { requiresAuth: true }
     },
@@ -49,23 +49,29 @@ const router = createRouter({
       meta: { requiresAuth: true }
     },
     {
-      path: '/teams/create',
-      name: 'teamsCreate',
-      component: () => import('../views/TeamCreateView.vue'),
-      meta: { requiresAuth: true }
-    },
-    {
-      path: '/login',
-      name: 'login',
-      component: LoginView
-    },
-    {
       path: '/team/:id',
       name: 'team',
       component: () => import('../views/TeamView.vue'),
       props: true,
       meta: { requiresAuth: true }
     },
+    {
+      path: '/teams/create',
+      name: 'teamsCreate',
+      component: () => import('../views/TeamCreateView.vue'),
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/project',
+      name: 'project',
+      component: () => import('../views/ProjectView.vue'),
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: LoginView
+    }
   ]
 })
 

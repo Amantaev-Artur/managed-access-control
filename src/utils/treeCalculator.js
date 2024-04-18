@@ -6,7 +6,6 @@ const calculateDepth = (groupId, groups) => {
     depth++;
     currentGroup = groups.find(group => group.id === currentGroup.parentId);
   }
-console.log(depth)
   return depth;
 };
 
