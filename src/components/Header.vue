@@ -1,8 +1,5 @@
 <template>
   <MDBNavbar expand="lg" bg="light" class="d-flex justify-content-between" container>
-    <!-- <MDBNavbarBrand>
-      <MDBIcon icon="mdb" iconStyle="fab" size="2x" />
-    </MDBNavbarBrand> -->
     <MDBNavbarToggler target="#navbarColor01" @click="collapse = !collapse"></MDBNavbarToggler>
     <MDBCollapse id="navbarColor01" v-model="collapse">
       <MDBNavbarNav class="mb-2 mb-lg-0">
